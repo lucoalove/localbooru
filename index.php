@@ -3,15 +3,13 @@
 <head>
 	<title>localbooru</title>
 	<style>
-		body { font-family: sans-serif; }
+		body { font-family: sans-serif; text-align: center; }
 		img, video { height: 200px; border: 2px solid transparent; }
-
-		h1 { text-align: center; font-size: 4em; }
-		h2 { text-align: center; font-size: 2em; }
-		h3 { text-align: center; font-size: 1em; }
 	</style>
 </head>
 <body>
+
+	<!-- php -S localhost:4444 -t . -->
 
 	<h1>[<a href="/">localbooru</a>]</h1>
 
@@ -53,7 +51,7 @@
 
 					if ($file != "." && $file != ".." && is_dir("./boards/$file")) {
 
-						echo "<h2><a href='$file'>$file</a></h2>";
+						echo "<h2><a href='$file'>/$file</a></h2>";
 					}
 				}
 
@@ -77,7 +75,7 @@
 
 				if ($file_extension == "png" || $file_extension == "jpg" || $file_extension == "jpeg" || $file_extension == "webp" || $file_extension == "gif") {
 
-					echo "<div style='text-align: center;'><img style='height: auto; max-height: 90vh; max-width: 100vw;' src='$file'></div>";
+					echo "<img style='height: auto; max-height: 90vh; max-width: 100vw;' src='$file'>";
 				}
 
 				if ($file_extension == "mp4") {
