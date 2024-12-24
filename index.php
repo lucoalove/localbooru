@@ -1,76 +1,81 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>collection booru</title>
+	<title>localbooru</title>
 	<style>
 		body { font-family: sans-serif; }
 		img, video { height: 200px; border: 2px solid transparent; }
 
 		h1 { text-align: center; font-size: 4em; }
-		h2 { border-bottom: 1px solid grey; }
+		h2 { text-align: center; font-size: 2em; }
 	</style>
 </head>
 <body>
 
-	<h1>[<a href="/">collection booru</a>]</h1>
+	<h1>[<a href="/">localbooru</a>]</h1>
 
 	<div>
 		<?php
 
-			function addImagesInDir($dir) {
+			function addBoard($board) {
 
-				echo "<h2>/$dir</h2>";
+				echo "<h2>$board</h2>";
 				
-				$files = scandir($dir);
+				$files = scandir("./boards/$board");
 
 				foreach ($files as $file) {
 
-					if (is_dir($file)) {
-						
-						if ($file != "." && $file != "..") {
-
-							addImagesInDir($dir . "/" . $file);
-						}
-
-					} else {
+					if (!is_dir("./boards/$board/$file")) {
 
 						$file_extension = pathinfo($file)["extension"];
 
 						if ($file_extension == "png" || $file_extension == "jpg" || $file_extension == "jpeg" || $file_extension == "webp" || $file_extension == "gif") {
 
-							$uri = str_replace(".", "*", str_replace("/", "$", $dir . "/" . $file));
+							$uri = $board . "&" . str_replace(".", "&", $file);
 
-							echo "<a href='$uri'><img src='" . $dir . "/" . $file . "'></a>";
-						}
+							echo "<a href='$uri'><img src='./boards/" . $board . "/" . $file . "'></a>";
+						
+						} else if ($file_extension == "mp4") {
 
-						if ($file_extension == "mp4") {
-
-							echo "<video height='200' controls src='" . $dir . "/" . $file . "'></video>";
+							echo "<video height='200' controls src='./boards/" . $board . "/" . $file . "'></video>";
 						}
 					}
 				}
 			}
 
-			$uri = str_replace("*", ".", str_replace("$", "/", $_SERVER["REQUEST_URI"]));
+			$uri_elements = explode("&", $_SERVER["REQUEST_URI"]);
 
-			if ($uri == "/") {
+			if (count($uri_elements) == 1) {
 
-				addImagesInDir(".");
+				// home (all boards/items)
+
+				$files = scandir("./boards");
+
+				foreach ($files as $file) {
+
+					if ($file != "." && $file != ".." && is_dir("./boards/$file")) {
+
+						addBoard($file);
+					}
+				}
 
 			} else {
 
-				echo "<h2>" . $uri . "</h2>";
+				// specific item
 
-				$file_extension = pathinfo($uri)["extension"];
+				echo "<h2>" . $uri_elements[0] . " => " . $uri_elements[1] . "</h2>";
+
+				$file = "./boards$uri_elements[0]/$uri_elements[1].$uri_elements[2]";
+				$file_extension = $uri_elements[2];
 
 				if ($file_extension == "png" || $file_extension == "jpg" || $file_extension == "jpeg" || $file_extension == "webp" || $file_extension == "gif") {
 
-					echo "<img style='height: auto; max-height: 90vh; max-width: 100vw;' src='" . $uri . "'>";
+					echo "<img style='height: auto; max-height: 90vh; max-width: 100vw;' src='$file'>";
 				}
 
 				if ($file_extension == "mp4") {
 
-					echo "<video height='600' controls src='" . $uri . "'></video>";
+					echo "<video height='600' controls src='$file'></video>";
 				}
 			}
 		?>
