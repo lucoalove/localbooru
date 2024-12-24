@@ -8,6 +8,7 @@
 
 		h1 { text-align: center; font-size: 4em; }
 		h2 { text-align: center; font-size: 2em; }
+		h3 { text-align: center; font-size: 1em; }
 	</style>
 </head>
 <body>
@@ -17,9 +18,7 @@
 	<div>
 		<?php
 
-			function addBoard($board) {
-
-				echo "<h2>$board</h2>";
+			function addBoardItems($board) {
 				
 				$files = scandir("./boards/$board");
 
@@ -27,17 +26,16 @@
 
 					if (!is_dir("./boards/$board/$file")) {
 
+						$uri = $board . "&" . str_replace(".", "&", $file);
 						$file_extension = pathinfo($file)["extension"];
 
 						if ($file_extension == "png" || $file_extension == "jpg" || $file_extension == "jpeg" || $file_extension == "webp" || $file_extension == "gif") {
-
-							$uri = $board . "&" . str_replace(".", "&", $file);
 
 							echo "<a href='$uri'><img src='./boards/" . $board . "/" . $file . "'></a>";
 						
 						} else if ($file_extension == "mp4") {
 
-							echo "<video height='200' controls src='./boards/" . $board . "/" . $file . "'></video>";
+							echo "<a href='$uri'><video height='200' src='./boards$board/$file'></video></a>";
 						}
 					}
 				}
@@ -45,9 +43,9 @@
 
 			$uri_elements = explode("&", $_SERVER["REQUEST_URI"]);
 
-			if (count($uri_elements) == 1) {
+			if ($uri_elements[0] == "/") {
 
-				// home (all boards/items)
+				// all boards
 
 				$files = scandir("./boards");
 
@@ -55,27 +53,36 @@
 
 					if ($file != "." && $file != ".." && is_dir("./boards/$file")) {
 
-						addBoard($file);
+						echo "<h2><a href='$file'>$file</a></h2>";
 					}
 				}
+
+			} else if (count($uri_elements) == 1) {
+
+				// all items in a board
+
+				echo "<h2><a href='$uri_elements[0]'>$uri_elements[0]</a></h2>";
+
+				addBoardItems($uri_elements[0]);
 
 			} else {
 
 				// specific item
 
-				echo "<h2>" . $uri_elements[0] . " => " . $uri_elements[1] . "</h2>";
+				echo "<h2><a href='$uri_elements[0]'>$uri_elements[0]</a></h2>";
+				echo "<h3>\"$uri_elements[1]\"</h3>";
 
 				$file = "./boards$uri_elements[0]/$uri_elements[1].$uri_elements[2]";
 				$file_extension = $uri_elements[2];
 
 				if ($file_extension == "png" || $file_extension == "jpg" || $file_extension == "jpeg" || $file_extension == "webp" || $file_extension == "gif") {
 
-					echo "<img style='height: auto; max-height: 90vh; max-width: 100vw;' src='$file'>";
+					echo "<div style='text-align: center;'><img style='height: auto; max-height: 90vh; max-width: 100vw;' src='$file'></div>";
 				}
 
 				if ($file_extension == "mp4") {
 
-					echo "<video height='600' controls src='$file'></video>";
+					echo "<video style='width: 100%; height: 80vh;' controls src='$file'></video>";
 				}
 			}
 		?>
