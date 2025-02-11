@@ -91,7 +91,7 @@
 				echo "<h2>$uri_elements[1]/$uri_elements[2]</h2>";
 
 				$file = "/boards/$uri_elements[1]/$uri_elements[2]";
-				$file_extension = explode(".", $uri_elements[2])[1];
+				$file_extension = pathinfo($uri_elements[2])["extension"];
 
 				if ($file_extension == "png" || $file_extension == "jpg" || $file_extension == "jpeg" || $file_extension == "webp" || $file_extension == "gif") {
 
