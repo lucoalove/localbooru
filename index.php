@@ -3,17 +3,43 @@
 <head>
 	<title>localbooru</title>
 	<style>
-		body { font-family: sans-serif; text-align: center; }
+		body { font-family: sans-serif; margin: 0; display: grid; grid-template-columns: 20em 1fr; grid-template-rows: auto 1fr; min-height: 100vh; }
 		img, video { height: 200px; border: 2px solid transparent; }
+
+		h1 { margin: 0; }
+
+		header, aside, main { padding: 1em; }
+
+		header { background: #159; color: white; grid-column: 1 / span 2; text-align: center; }
+		main { background: #cef; }
+		aside { background: #fff; border-right: 1px solid black; }
 	</style>
 </head>
 <body>
 
 	<!-- php -S localhost:4444 -t . -->
+	<!-- layout inspired by https://webdesignerdepot-wp.s3.us-east-2.amazonaws.com/2023/11/27135129/01-current-DA-homepage.jpg -->
 
-	<h1>[<a href="/">localbooru</a>]</h1>
+	<header>
+		<h1>[<a href="/">localbooru</a>]</h1>
+	</header>
 
-	<div>
+	<aside>
+		<strong>BOARDS</strong>
+		<?php
+			$files = scandir("./boards");
+
+			foreach ($files as $file) {
+
+				if ($file != "." && $file != ".." && is_dir("./boards/$file")) {
+
+					echo "<br><br><a href='$file'>/$file</a>";
+				}
+			}
+		?>
+	</aside>
+
+	<main>
 		<?php
 
 			function addBoardItems($board) {
@@ -43,23 +69,13 @@
 
 			if ($uri_elements[0] == "/") {
 
-				// all boards
-
-				$files = scandir("./boards");
-
-				foreach ($files as $file) {
-
-					if ($file != "." && $file != ".." && is_dir("./boards/$file")) {
-
-						echo "<h2><a href='$file'>/$file</a></h2>";
-					}
-				}
+				// home
 
 			} else if (count($uri_elements) == 1) {
 
 				// all items in a board
 
-				echo "<h2><a href='$uri_elements[0]'>$uri_elements[0]</a></h2>";
+				echo "<h2>$uri_elements[0]</h2>";
 
 				addBoardItems($uri_elements[0]);
 
@@ -67,8 +83,7 @@
 
 				// specific item
 
-				echo "<h2><a href='$uri_elements[0]'>$uri_elements[0]</a></h2>";
-				echo "<h3>\"$uri_elements[1]\"</h3>";
+				echo "<h2>$uri_elements[0]/$uri_elements[1]</h2>";
 
 				$file = "./boards$uri_elements[0]/$uri_elements[1].$uri_elements[2]";
 				$file_extension = $uri_elements[2];
@@ -84,7 +99,7 @@
 				}
 			}
 		?>
-	</div>
+	</main>
 
 </body>
 </html>
