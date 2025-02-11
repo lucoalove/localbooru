@@ -15,7 +15,7 @@
 
 		header { background: #159; color: white; grid-column: 1 / span 2; }
 		main { background: #bdf; }
-		aside { background: #def; border-right: 1px solid black; }
+		aside { background: #def; border-right: 1px solid #159; }
 	</style>
 </head>
 <body>
@@ -36,7 +36,7 @@
 
 				if ($file != "." && $file != ".." && is_dir("./boards/$file")) {
 
-					echo "<br><br><a href='$file'>$file</a>";
+					echo "<br><br><a href='/$file'>$file</a>";
 				}
 			}
 		?>
@@ -53,44 +53,45 @@
 
 					if (!is_dir("./boards/$board/$file")) {
 
-						$uri = $board . "&" . str_replace(".", "&", $file);
+						$uri = $board . "/" . $file;
 						$file_extension = pathinfo($file)["extension"];
 
 						if ($file_extension == "png" || $file_extension == "jpg" || $file_extension == "jpeg" || $file_extension == "webp" || $file_extension == "gif") {
 
-							echo "<a href='$uri'><img src='./boards/" . $board . "/" . $file . "'></a>";
+							echo "<a href='$uri'><img src='/boards/" . $board . "/" . $file . "'></a>";
 						
 						} else if ($file_extension == "mp4") {
 
-							echo "<a href='$uri'><video height='200' src='./boards$board/$file'></video></a>";
+							echo "<a href='$uri'><video height='200' src='/boards/$board/$file'></video></a>";
 						}
 					}
 				}
 			}
 
-			$uri_elements = explode("&", $_SERVER["REQUEST_URI"]);
+			$uri_elements = explode("/", $_SERVER["REQUEST_URI"]);
 
-			if ($uri_elements[0] == "/") {
+			if ($uri_elements[1] == "") {
 
 				// home
+
 				echo "<h2>Welcome to localbooru!</h2><p>We are currently serving [num] images.</p>";
 
-			} else if (count($uri_elements) == 1) {
+			} else if (count($uri_elements) == 2) {
 
 				// all items in a board
 
-				echo "<h2>$uri_elements[0]</h2>";
+				echo "<h2>$uri_elements[1]</h2>";
 
-				addBoardItems($uri_elements[0]);
+				addBoardItems($uri_elements[1]);
 
 			} else {
 
 				// specific item
 
-				echo "<h2>$uri_elements[0]/$uri_elements[1]</h2>";
+				echo "<h2>$uri_elements[1]/$uri_elements[2]</h2>";
 
-				$file = "./boards$uri_elements[0]/$uri_elements[1].$uri_elements[2]";
-				$file_extension = $uri_elements[2];
+				$file = "/boards/$uri_elements[1]/$uri_elements[2]";
+				$file_extension = explode(".", $uri_elements[2])[1];
 
 				if ($file_extension == "png" || $file_extension == "jpg" || $file_extension == "jpeg" || $file_extension == "webp" || $file_extension == "gif") {
 
