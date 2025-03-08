@@ -3,32 +3,40 @@
 <head>
 	<title>localbooru</title>
 	<style>
-		body { font-family: sans-serif; margin: 0; display: grid; grid-template-columns: 20em 1fr; grid-template-rows: auto 1fr; min-height: 100vh; }
+		body { font-family: sans-serif; margin: 0; display: grid; grid-template-columns: 20em 1fr; min-height: 100vh; font-size: 15px; color: #f1f1f1; background: #111014; }
 		img, video { height: 200px; border: 2px solid transparent; }
 
-		h1 { margin: 0; }
+		h1 { margin: 1em; padding: 1em; border: 1px solid #445; text-align: center; border-radius: 4px; }
+		h2 { color: #888; font-size: 1em; }
 
 		a { text-decoration: none; }
 		a:hover { text-decoration: underline; }
 
 		header, aside, main { padding: 1em; }
 
-		header { background: #159; color: white; grid-column: 1 / span 2; }
-		main { background: #bdf; }
-		aside { background: #def; border-right: 1px solid #159; }
+		aside { border-right: 1px solid #445; }
+		aside a { color: inherit; display: block; padding: 0.5em; }
+		aside a:hover { background: #222; }
 	</style>
 </head>
 <body>
 
 	<!-- php -S localhost:4444 -t . -->
-	<!-- layout inspired by https://webdesignerdepot-wp.s3.us-east-2.amazonaws.com/2023/11/27135129/01-current-DA-homepage.jpg -->
-
-	<header>
-		<h1><a href="/" style="color: white;">localbooru</a></h1>
-	</header>
+	<!--
+	layout inspired by https://webdesignerdepot-wp.s3.us-east-2.amazonaws.com/2023/11/27135129/01-current-DA-homepage.jpg
+	and https://9gag.com/
+	-->
 
 	<aside>
-		<strong>BOARDS</strong>
+		<h1>localbooru</h1>
+
+		<div style="font-weight: 700;">
+			<a href="/">Home</a>
+			<a href="/">Random</a>
+		</div>
+		<br>
+
+		<h2>Boards</h2>
 		<?php
 			$files = scandir("./boards");
 
@@ -36,7 +44,7 @@
 
 				if ($file != "." && $file != ".." && is_dir("./boards/$file")) {
 
-					echo "<br><br><a href='/$file'>$file</a>";
+					echo "<a href='/$file'>$file</a>";
 				}
 			}
 		?>
@@ -74,7 +82,7 @@
 
 				// home
 
-				echo "<h2>Welcome to localbooru!</h2><p>We are currently serving [num] images.</p>";
+				echo "<h2>Welcome to <span style='color: #59c;'>localbooru!</span></h2><p>We are currently serving [num] images.</p>";
 
 			} else if (count($uri_elements) == 2) {
 
