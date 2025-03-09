@@ -13,8 +13,9 @@
 		main { padding: 1em; }
 
 		aside { border-right: 1px solid #445; }
-		aside a { color: inherit; display: block; padding: 0.5em; }
-		aside a:hover { background: #232229; }
+		aside a { color: inherit; display: block; padding: 0.5em; transition-duration: 0.15s; }
+		aside a[selected] { background: #232229; font-weight: 700; }
+		aside a:hover { background: #313038; }
 
 		svg { vertical-align: middle; transform: translateY(-2px); }
 	</style>
@@ -27,6 +28,10 @@
 	and https://9gag.com/
 	-->
 
+	<?php
+		$uri_elements = explode("/", $_SERVER["REQUEST_URI"]);
+	?>
+
 	<aside>
 		<div style="position: sticky; top: 0; padding: 1em;">
 			<h1>localbooru</h1>
@@ -35,7 +40,7 @@
 
 			<div style="font-weight: 700;">
 				<a href="/">
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f1f1f1"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
+					<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f1f1f1"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
 					Home
 				</a>
 				<a href="/">
@@ -53,7 +58,10 @@
 
 					if ($file != "." && $file != ".." && is_dir("./boards/$file")) {
 
-						echo "<a href='/$file'>$file</a>";
+						if ($uri_elements[1] == $file)
+							echo "<a href='/$file' selected>$file</a>";
+						else
+							echo "<a href='/$file'>$file</a>";
 					}
 				}
 			?>
@@ -85,8 +93,6 @@
 					}
 				}
 			}
-
-			$uri_elements = explode("/", $_SERVER["REQUEST_URI"]);
 
 			if ($uri_elements[1] == "") {
 
