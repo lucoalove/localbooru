@@ -30,6 +30,7 @@
 
 	<?php
 		$uri_elements = explode("/", $_SERVER["REQUEST_URI"]);
+		$board_files = scandir("./boards");
 	?>
 
 	<aside>
@@ -39,7 +40,7 @@
 			<a href="/" style="text-align: center; background: #59c; color: black; font-weight: 700; margin: 1em 0; border-radius: 4px;">Upload</a>
 
 			<div style="font-weight: 700;">
-				<a href="/">
+				<a href="/" <?php if ($uri_elements[1] == "") echo "selected"; ?>>
 					<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f1f1f1"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
 					Home
 				</a>
@@ -52,9 +53,7 @@
 
 			<h2 style="color: #888; font-size: 1em;">Boards</h2>
 			<?php
-				$files = scandir("./boards");
-
-				foreach ($files as $file) {
+				foreach ($board_files as $file) {
 
 					if ($file != "." && $file != ".." && is_dir("./boards/$file")) {
 
