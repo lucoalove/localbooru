@@ -30,7 +30,9 @@
 
 	<?php
 		$uri_elements = explode("/", $_SERVER["REQUEST_URI"]);
-		$board_files = scandir("./boards");
+		$board_paths = glob("./boards/*");
+
+		$item_files_count = 0;
 	?>
 
 	<aside>
@@ -53,14 +55,18 @@
 
 			<h2 style="color: #888; font-size: 1em;">Boards</h2>
 			<?php
-				foreach ($board_files as $file) {
+				foreach ($board_paths as $path) {
 
-					if ($file != "." && $file != ".." && is_dir("./boards/$file")) {
+					if (is_dir($path)) {
 
-						if ($uri_elements[1] == $file)
-							echo "<a href='/$file' selected>$file</a>";
+						$name = substr($path, 9);
+
+						if ($uri_elements[1] == $name)
+							echo "<a href='/$name' selected>$name</a>";
 						else
-							echo "<a href='/$file'>$file</a>";
+							echo "<a href='/$name'>$name</a>";
+
+						$item_files_count += count(glob( "$path/*" ));
 					}
 				}
 			?>
@@ -72,22 +78,22 @@
 
 			function addBoardItems($board) {
 				
-				$files = scandir("./boards/$board");
+				$item_paths = glob("./boards/$board/*");
 
-				foreach ($files as $file) {
+				foreach ($item_paths as $path) {
 
-					if (!is_dir("./boards/$board/$file")) {
+					if (!is_dir($path)) { // there shouldn't be directories but you never know
 
-						$uri = $board . "/" . $file;
-						$file_extension = pathinfo($file)["extension"];
+						$uri = substr($path, 9);
+						$extension = pathinfo($path)["extension"];
 
-						if ($file_extension == "png" || $file_extension == "jpg" || $file_extension == "jpeg" || $file_extension == "webp" || $file_extension == "gif") {
+						if ($extension == "png" || $extension == "jpg" || $extension == "jpeg" || $extension == "webp" || $extension == "gif") {
 
-							echo "<a href='$uri'><img src='/boards/" . $board . "/" . $file . "'></a>";
+							echo "<a href='$uri'><img src='$path'></a>";
 						
-						} else if ($file_extension == "mp4") {
+						} else if ($extension == "mp4") {
 
-							echo "<a href='$uri'><video height='200' src='/boards/$board/$file'></video></a>";
+							echo "<a href='$uri'><video height='200' src='$path'></video></a>";
 						}
 					}
 				}
@@ -97,7 +103,7 @@
 
 				// home
 
-				echo "<h2>Welcome to <span style='color: #59c;'>localbooru!</span></h2><p>We are currently serving [num] images.</p>";
+				echo "<h2>Welcome to <span style='color: #59c;'>localbooru!</span></h2><p>We are currently hosting <strong>$item_files_count</strong> images.</p>";
 
 			} else if (count($uri_elements) == 2) {
 
