@@ -136,7 +136,7 @@
 
 				if ($extension == "mp4" || $extension == "webm") {
 
-					echo "<video style='width: 100%; height: 80vh;' controls src='$file'></video>";
+					echo "<video style='background: #050507; width: 100%; height: 80vh;' controls src='$file'></video>";
 				}
 
 				echo "<h2>$uri_elements[1]/$uri_elements[2]</h2>";
