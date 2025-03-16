@@ -145,7 +145,7 @@
 					echo "<video style='background: #050507; width: 100%; height: 80vh;' controls src='$file'></video>";
 				}
 
-				echo "<h1>" . ucwords(str_replace("_", " ", substr($uri_elements[2], 0, strpos($uri_elements[2], ".")))) . "</h1>";
+				echo "<h1>" . ucwords(str_replace(["_", "%20"], " ", substr($uri_elements[2], 0, strpos($uri_elements[2], ".")))) . "</h1>";
 				echo "<p style='color: #889;'>$uri_elements[1]/$uri_elements[2]</p>";
 			}
 		?>
