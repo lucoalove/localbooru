@@ -66,7 +66,7 @@
 			</div>
 			<br>
 
-			<h2 style="color: #888; font-size: 1em;">Boards</h2>
+			<h2 style="color: #889; font-size: 1em;">Boards</h2>
 			<?php
 				foreach ($board_paths as $path) {
 
