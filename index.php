@@ -6,9 +6,9 @@
 		body { font-family: sans-serif; margin: 0; display: grid; grid-template-columns: 20em 1fr; min-height: 100vh; font-size: 15px; color: #f1f1f1; background: #111014; }
 		img, video { height: 200px; border: 2px solid transparent; }
 
-		h1 { padding: 1em; border: 1px solid #445; text-align: center; border-radius: 4px; }
-
 		a { text-decoration: none; }
+
+		header { padding: 1em; border: 1px solid #445; text-align: center; border-radius: 4px; font-size: 1.5em; font-weight: 700; }
 
 		main { padding: 1em; }
 
@@ -37,7 +37,7 @@
 
 	<aside>
 		<div style="position: sticky; top: 0; padding: 1em;">
-			<h1>localbooru</h1>
+			<header>localbooru</header>
 
 			<a href="/" style="text-align: center; background: #59c; color: black; font-weight: 700; margin: 1em 0; border-radius: 4px;">Upload</a>
 
@@ -112,13 +112,13 @@
 
 				// home
 
-				echo "<h2>Welcome to <span style='color: #59c;'>localbooru!</span></h2><p>We are currently hosting <strong>$item_files_count</strong> images.</p>";
+				echo "<h1>Welcome to <span style='color: #59c;'>localbooru!</span></h1><p>We are currently hosting <strong>$item_files_count</strong> images.</p>";
 
 			} else if (count($uri_elements) == 2) {
 
 				// all items in a board
 
-				echo "<h2>$uri_elements[1]</h2>";
+				echo "<h1>$uri_elements[1]</h1>";
 
 				addBoardItems($uri_elements[1]);
 
@@ -139,7 +139,8 @@
 					echo "<video style='background: #050507; width: 100%; height: 80vh;' controls src='$file'></video>";
 				}
 
-				echo "<h2>$uri_elements[1]/$uri_elements[2]</h2>";
+				echo "<h1>" . ucwords(str_replace("_", " ", substr($uri_elements[2], 0, strpos($uri_elements[2], ".")))) . "</h1>";
+				echo "<p style='color: #445;'>$uri_elements[1]/$uri_elements[2]</p>";
 			}
 		?>
 	</main>
