@@ -59,6 +59,10 @@
 					<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f1f1f1"><path d="M640-260q25 0 42.5-17.5T700-320q0-25-17.5-42.5T640-380q-25 0-42.5 17.5T580-320q0 25 17.5 42.5T640-260ZM480-420q25 0 42.5-17.5T540-480q0-25-17.5-42.5T480-540q-25 0-42.5 17.5T420-480q0 25 17.5 42.5T480-420ZM320-580q25 0 42.5-17.5T380-640q0-25-17.5-42.5T320-700q-25 0-42.5 17.5T260-640q0 25 17.5 42.5T320-580ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/></svg>
 					Random
 				</a>
+				<a href="/">
+					<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f1f1f1"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+					Upload
+				</a>
 			</div>
 			<br>
 
@@ -120,6 +124,8 @@
 
 				echo "<h1>$uri_elements[1]</h1>";
 
+				echo "<p style='color: #889;'>showing " . count(glob("./boards/$uri_elements[1]/*")) . " items</p>";
+
 				addBoardItems($uri_elements[1]);
 
 			} else {
@@ -140,7 +146,7 @@
 				}
 
 				echo "<h1>" . ucwords(str_replace("_", " ", substr($uri_elements[2], 0, strpos($uri_elements[2], ".")))) . "</h1>";
-				echo "<p style='color: #445;'>$uri_elements[1]/$uri_elements[2]</p>";
+				echo "<p style='color: #889;'>$uri_elements[1]/$uri_elements[2]</p>";
 			}
 		?>
 	</main>
