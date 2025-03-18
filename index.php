@@ -122,6 +122,10 @@
 
 				$item_paths = glob("$path/*");
 
+				// every folder + go up
+				if ($path != "./home")
+					echo "<a class='folder' href='/" . substr($path, 7) . "/..'>←</a>";
+
 				foreach ($item_paths as $item_path) {
 
 					$uri = substr($item_path, 7);
@@ -140,6 +144,7 @@
 				echo "<p style='color: #889;'>showing " . count(glob("$path/*.*")) . " media files</p>";
 				// showing 1-50 (377 total)
 
+				// every media
 				foreach ($item_paths as $item_path) {
 
 					if (!is_dir($item_path)) {
