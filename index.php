@@ -174,11 +174,13 @@
 				$index = $index[array_key_last($index)];
 
 				if (is_numeric($index)) {
+
+					$path_wo_trailing = substr($path, 0, strlen($path) - strlen($index) - 1 - strlen($extension));
 					
 					$i = 1;
 
-					while (count(glob(str_replace($index, $i, $path))) != 0) {
-						insertMediaAnchor(str_replace($index, $i, $path));
+					while (count($siblings = glob($path_wo_trailing . $i . ".*")) != 0) {
+						insertMediaAnchor($siblings[0]);
 						$i++;
 					}
 				}
