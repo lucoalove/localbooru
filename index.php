@@ -18,6 +18,8 @@
 		aside a:hover { background: #313038; }
 
 		svg { vertical-align: middle; transform: translateY(-2px); }
+
+		.folder { display: inline-block; border: 1px solid #445; padding: 1em; border-radius: 4px; margin-right: 0.5em; color: inherit; }
 	</style>
 </head>
 <body>
@@ -107,22 +109,26 @@
 
 				foreach ($item_paths as $path) {
 
+					$uri = substr($path, 7);
+
 					if (is_dir($path)) {
 
-						echo "<a href='" . substr($path, 7) . "'>$path</a>";
+						$name = explode("/", $path);
+						$name = $name[array_key_last($name)];
+
+						echo "<a class='folder' href='$uri'>" . $name . "</a>";
 
 					} else {
 
-						$uri = substr($path, 9);
 						$extension = pathinfo($path)["extension"];
 
 						if ($extension == "png" || $extension == "jpg" || $extension == "jpeg" || $extension == "webp" || $extension == "gif") {
 
-							echo "<a href='$uri'><img src='$path'></a>";
+							echo "<a href='/$uri'><img src='/$path'></a>";
 						
 						} else if ($extension == "mp4" || $extension == "webm") {
 
-							echo "<a href='$uri'><video height='200' src='$path'></video></a>";
+							echo "<a href='/$uri'><video height='200' src='/$path'></video></a>";
 						}
 					}
 				}
@@ -131,21 +137,22 @@
 
 				// specific item
 
-				$file = "/boards/$uri_elements[1]/$uri_elements[2]";
-				$extension = pathinfo($uri_elements[2])["extension"];
+				$extension = pathinfo($path)["extension"];
+
+				$name = explode("/", $path);
+				$name = $name[array_key_last($name)];
 
 				if ($extension == "png" || $extension == "jpg" || $extension == "jpeg" || $extension == "webp" || $extension == "gif") {
 
-					echo "<div style='background: #050507; display: flex; justify-content: center;'><img style='height: auto; max-height: 90vh; max-width: 100%;' src='$file'></div>";
+					echo "<div style='background: #050507; display: flex; justify-content: center;'><img style='height: auto; max-height: 90vh; max-width: 100%;' src='/$path'></div>";
 				}
 
 				if ($extension == "mp4" || $extension == "webm") {
 
-					echo "<video style='background: #050507; width: 100%; height: 80vh;' controls src='$file'></video>";
+					echo "<video style='background: #050507; width: 100%; height: 80vh;' controls src='/$path'></video>";
 				}
 
-				echo "<h1>" . ucwords(str_replace(["_", "%20"], " ", substr($uri_elements[2], 0, strpos($uri_elements[2], ".")))) . "</h1>";
-				echo "<p style='color: #889;'>$uri_elements[1]/$uri_elements[2]</p>";
+				echo "<h1>" . ucwords(str_replace(["_", "%20"], " ", substr($name, 0, strpos($name, ".")))) . " <span style='color: #889;'>$path</span></h1>";
 			}
 		?>
 	</main>
