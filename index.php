@@ -8,7 +8,7 @@
 
 		a { text-decoration: none; }
 
-		header { padding: 1em; border: 1px solid #445; text-align: center; border-radius: 4px; font-size: 1.5em; font-weight: 700; }
+		header { padding: 1em; border: 1px solid #445; text-align: center; border-radius: 4px; }
 
 		main { padding: 1em; }
 
@@ -29,32 +29,57 @@
 	-->
 
 	<?php
-		$uri_elements = explode("/", $_SERVER["REQUEST_URI"]);
-		$board_paths = glob("./boards/*");
+		$path = "./home" . $_SERVER["REQUEST_URI"];
+
+		if (substr($path, -1) == "/")
+			$path = substr($path, 0, strlen($path) - 1);
+
+		$path_is_dir = is_dir($path);
 
 		$item_files_count = 0;
+
+		// <?php
+		// 	foreach ($board_paths as $path) {
+
+		// 		if (is_dir($path)) {
+
+		// 			$name = substr($path, 9);
+
+		// 			if ($uri_elements[1] == $name)
+		// 				echo "<a href='/$name' selected>$name</a>";
+		// 			else
+		// 				echo "<a href='/$name'>$name</a>";
+
+		// 			$item_files_count += count(glob("$path/*"));
+		// 		}
+		// 	}
+		// 
 	?>
 
 	<aside>
 		<div style="position: sticky; top: 0; padding: 1em;">
-			<header>localbooru</header>
+			<header>
+				<div style="font-size: 1.5em; font-weight: 700;">localbooru</div>
+				<br>
+				<strong><?php echo $item_files_count; ?></strong> total files.
+			</header>
 
-			<a href="/" style="text-align: center; background: #59c; color: black; font-weight: 700; margin: 1em 0; border-radius: 4px;">Upload</a>
+			<br>
 
-			<div style="font-weight: 700;">
-				<a href="/" <?php if ($uri_elements[1] == "") echo "selected"; ?>>
+			<div>
+				<a href="/" <?php if ($path == "./home/") echo "selected"; ?>>
 					<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f1f1f1"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
 					Home
 				</a>
-				<a href="<?php
+				<!-- <a href="<?php
 
-					$potential_item_paths = [];
+					// $potential_item_paths = [];
 					
-					foreach ($board_paths as $path) {
-						$potential_item_paths = array_merge($potential_item_paths, glob($path . "/*"));
-					}
+					// foreach ($board_paths as $path) {
+					// 	$potential_item_paths = array_merge($potential_item_paths, glob($path . "/*"));
+					// }
 					
-					echo "/" . substr($potential_item_paths[array_rand($potential_item_paths)], 9);
+					// echo "/" . substr($potential_item_paths[array_rand($potential_item_paths)], 9);
 				?>">
 					<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f1f1f1"><path d="M640-260q25 0 42.5-17.5T700-320q0-25-17.5-42.5T640-380q-25 0-42.5 17.5T580-320q0 25 17.5 42.5T640-260ZM480-420q25 0 42.5-17.5T540-480q0-25-17.5-42.5T480-540q-25 0-42.5 17.5T420-480q0 25 17.5 42.5T480-420ZM320-580q25 0 42.5-17.5T380-640q0-25-17.5-42.5T320-700q-25 0-42.5 17.5T260-640q0 25 17.5 42.5T320-580ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/></svg>
 					Random
@@ -62,40 +87,31 @@
 				<a href="/">
 					<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f1f1f1"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
 					Upload
-				</a>
+				</a> -->
 			</div>
-			<br>
-
-			<h2 style="color: #889; font-size: 1em;">Boards</h2>
-			<?php
-				foreach ($board_paths as $path) {
-
-					if (is_dir($path)) {
-
-						$name = substr($path, 9);
-
-						if ($uri_elements[1] == $name)
-							echo "<a href='/$name' selected>$name</a>";
-						else
-							echo "<a href='/$name'>$name</a>";
-
-						$item_files_count += count(glob("$path/*"));
-					}
-				}
-			?>
 		</div>
 	</aside>
 
 	<main>
 		<?php
 
-			function addBoardItems($board_name) {
-				
-				$item_paths = glob("./boards/$board_name/*");
+			if ($path_is_dir) {
+
+				// all items in a board
+
+				echo "<h1>$path</h1>";
+
+				echo "<p style='color: #889;'>showing " . count(glob("$path/*")) . " items</p>";
+
+				$item_paths = glob("$path/*");
 
 				foreach ($item_paths as $path) {
 
-					if (!is_dir($path)) { // there shouldn't be directories but you never know
+					if (is_dir($path)) {
+
+						echo "<a href='" . substr($path, 7) . "'>$path</a>";
+
+					} else {
 
 						$uri = substr($path, 9);
 						$extension = pathinfo($path)["extension"];
@@ -110,23 +126,6 @@
 						}
 					}
 				}
-			}
-
-			if ($uri_elements[1] == "") {
-
-				// home
-
-				echo "<h1>Welcome to <span style='color: #59c;'>localbooru!</span></h1><p>We are currently hosting <strong>$item_files_count</strong> images.</p>";
-
-			} else if (count($uri_elements) == 2) {
-
-				// all items in a board
-
-				echo "<h1>$uri_elements[1]</h1>";
-
-				echo "<p style='color: #889;'>showing " . count(glob("./boards/$uri_elements[1]/*")) . " items</p>";
-
-				addBoardItems($uri_elements[1]);
 
 			} else {
 
