@@ -19,7 +19,7 @@
 
 		svg { vertical-align: middle; transform: translateY(-2px); }
 
-		.folder { display: inline-block; border: 1px solid #445; padding: 1em; border-radius: 4px; margin-right: 0.5em; color: inherit; }
+		.folder { display: inline-block; border: 2px solid #445; width: 10em; text-align: center; padding: 1em; border-radius: 4px; margin-right: 0.5em; color: inherit; }
 	</style>
 </head>
 <body>
@@ -117,8 +117,16 @@
 						$name = $name[array_key_last($name)];
 
 						echo "<a class='folder' href='$uri'>" . $name . "</a>";
+					}
+				}
+				
+				echo "<br><br>";
 
-					} else {
+				foreach ($item_paths as $path) {
+
+					$uri = substr($path, 7);
+
+					if (!is_dir($path)) {
 
 						$extension = pathinfo($path)["extension"];
 
