@@ -28,6 +28,8 @@
 	<!--
 	layout inspired by https://webdesignerdepot-wp.s3.us-east-2.amazonaws.com/2023/11/27135129/01-current-DA-homepage.jpg
 	and https://9gag.com/
+
+	if you need an accent, use #59c
 	-->
 
 	<?php
@@ -47,6 +49,21 @@
 
 			} else {
 				return 1;
+			}
+		}
+
+		function insertMediaAnchor($path) {
+
+			$uri = substr($path, 7);
+			$extension = pathinfo($path)["extension"];
+
+			if ($extension == "png" || $extension == "jpg" || $extension == "jpeg" || $extension == "webp" || $extension == "gif") {
+
+				echo "<a href='/$uri'><img src='/$path'></a>";
+			
+			} else if ($extension == "mp4" || $extension == "webm") {
+
+				echo "<a href='/$uri'><video height='200' src='/$path'></video></a>";
 			}
 		}
 
@@ -121,23 +138,13 @@
 				echo "<br><br>";
 
 				echo "<p style='color: #889;'>showing " . count(glob("$path/*.*")) . " media files</p>";
+				// showing 1-50 (377 total)
 
 				foreach ($item_paths as $item_path) {
 
-					$uri = substr($item_path, 7);
-
 					if (!is_dir($item_path)) {
 
-						$extension = pathinfo($item_path)["extension"];
-
-						if ($extension == "png" || $extension == "jpg" || $extension == "jpeg" || $extension == "webp" || $extension == "gif") {
-
-							echo "<a href='/$uri'><img src='/$item_path'></a>";
-						
-						} else if ($extension == "mp4" || $extension == "webm") {
-
-							echo "<a href='/$uri'><video height='200' src='/$item_path'></video></a>";
-						}
+						insertMediaAnchor($item_path);
 					}
 				}
 
@@ -149,6 +156,9 @@
 
 				$name = explode("/", $path);
 				$name = $name[array_key_last($name)];
+				$name = substr($name, 0, strpos($name, "."));
+
+				echo "<h1>" . ucwords(str_replace(["_", "%20"], " ", $name)) . " <span style='color: #889;'>$path</span></h1>";
 
 				if ($extension == "png" || $extension == "jpg" || $extension == "jpeg" || $extension == "webp" || $extension == "gif") {
 
@@ -160,7 +170,18 @@
 					echo "<video style='background: #050507; width: 100%; height: 80vh;' controls src='/$path'></video>";
 				}
 
-				echo "<h1>" . ucwords(str_replace(["_", "%20"], " ", substr($name, 0, strpos($name, ".")))) . " <span style='color: #889;'>$path</span></h1>";
+				$index = explode("_", $name);
+				$index = $index[array_key_last($index)];
+
+				if (is_numeric($index)) {
+					
+					$i = 1;
+
+					while (count(glob(str_replace($index, $i, $path))) != 0) {
+						insertMediaAnchor(str_replace($index, $i, $path));
+						$i++;
+					}
+				}
 			}
 		?>
 	</main>
