@@ -31,31 +31,31 @@
 	-->
 
 	<?php
+		function getMediaFileCount($path) {
+
+			if (is_dir($path)) {
+
+				$item_paths = glob("$path/*");
+				$count = 0;
+
+				foreach ($item_paths as $path) {
+
+					$count += getMediaFileCount($path);
+				}
+
+				return $count;
+
+			} else {
+				return 1;
+			}
+		}
+
 		$path = "./home" . $_SERVER["REQUEST_URI"];
 
 		if (substr($path, -1) == "/")
 			$path = substr($path, 0, strlen($path) - 1);
 
 		$path_is_dir = is_dir($path);
-
-		$item_files_count = 0;
-
-		// <?php
-		// 	foreach ($board_paths as $path) {
-
-		// 		if (is_dir($path)) {
-
-		// 			$name = substr($path, 9);
-
-		// 			if ($uri_elements[1] == $name)
-		// 				echo "<a href='/$name' selected>$name</a>";
-		// 			else
-		// 				echo "<a href='/$name'>$name</a>";
-
-		// 			$item_files_count += count(glob("$path/*"));
-		// 		}
-		// 	}
-		// 
 	?>
 
 	<aside>
@@ -63,7 +63,7 @@
 			<header>
 				<div style="font-size: 1.5em; font-weight: 700;">localbooru</div>
 				<br>
-				<strong><?php echo $item_files_count; ?></strong> total files.
+				<strong><?php echo getMediaFileCount("./home"); ?></strong> total media files.
 			</header>
 
 			<br>
@@ -103,17 +103,15 @@
 
 				echo "<h1>$path</h1>";
 
-				echo "<p style='color: #889;'>showing " . count(glob("$path/*")) . " items</p>";
-
 				$item_paths = glob("$path/*");
 
-				foreach ($item_paths as $path) {
+				foreach ($item_paths as $item_path) {
 
-					$uri = substr($path, 7);
+					$uri = substr($item_path, 7);
 
-					if (is_dir($path)) {
+					if (is_dir($item_path)) {
 
-						$name = explode("/", $path);
+						$name = explode("/", $item_path);
 						$name = $name[array_key_last($name)];
 
 						echo "<a class='folder' href='$uri'>" . $name . "</a>";
@@ -122,21 +120,23 @@
 				
 				echo "<br><br>";
 
-				foreach ($item_paths as $path) {
+				echo "<p style='color: #889;'>showing " . count(glob("$path/*.*")) . " media files</p>";
 
-					$uri = substr($path, 7);
+				foreach ($item_paths as $item_path) {
 
-					if (!is_dir($path)) {
+					$uri = substr($item_path, 7);
 
-						$extension = pathinfo($path)["extension"];
+					if (!is_dir($item_path)) {
+
+						$extension = pathinfo($item_path)["extension"];
 
 						if ($extension == "png" || $extension == "jpg" || $extension == "jpeg" || $extension == "webp" || $extension == "gif") {
 
-							echo "<a href='/$uri'><img src='/$path'></a>";
+							echo "<a href='/$uri'><img src='/$item_path'></a>";
 						
 						} else if ($extension == "mp4" || $extension == "webm") {
 
-							echo "<a href='/$uri'><video height='200' src='/$path'></video></a>";
+							echo "<a href='/$uri'><video height='200' src='/$item_path'></video></a>";
 						}
 					}
 				}
