@@ -124,7 +124,7 @@
 
 				// every folder + go up
 				if ($path != "./home")
-					echo "<a class='folder' href='/" . substr($path, 7) . "/..'>←</a>";
+					echo "<a class='folder' href='/" . substr($path, 7) . "/..'>&lt;-</a>";
 
 				foreach ($item_paths as $item_path) {
 
@@ -135,7 +135,7 @@
 						$name = explode("/", $item_path);
 						$name = $name[array_key_last($name)];
 
-						echo "<a class='folder' href='$uri'>" . $name . "</a>";
+						echo "<a class='folder' href='/$uri'>" . $name . "</a>";
 					}
 				}
 				
